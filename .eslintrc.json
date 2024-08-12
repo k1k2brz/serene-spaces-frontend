@@ -23,15 +23,7 @@
     "import/order": [
       "error",
       {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          [
-            "sibling",
-            "parent"
-          ]
-        ],
+        "groups": ["builtin", "external", "internal", ["sibling", "parent"]],
         "pathGroups": [
           {
             "pattern": "{react*,react*/**,next*,next*/**,zustand*,zustand*/**}",
@@ -56,21 +48,14 @@
       }
     ]
   },
-  "plugins": [
-    "prettier"
-  ],
+  "plugins": ["prettier"],
   "settings": {
     "react": {
       "version": "detect"
     },
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
   }
