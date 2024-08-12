@@ -1,4 +1,5 @@
 {
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "next/core-web-vitals",
     "plugin:react/recommended",
@@ -6,16 +7,31 @@
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:storybook/recommended"
   ],
   "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "lf"
+      }
+    ],
     "react/react-in-jsx-scope": "off",
     "import/no-unresolved": "error",
     "no-console": "off",
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal", ["sibling", "parent"]],
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          [
+            "sibling",
+            "parent"
+          ]
+        ],
         "pathGroups": [
           {
             "pattern": "{react*,react*/**,next*,next*/**,zustand*,zustand*/**}",
@@ -31,15 +47,30 @@
       }
     ],
     "jsx-a11y/anchor-is-valid": "off",
-    "prettier/prettier": "error"
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": true
+      }
+    ]
   },
+  "plugins": [
+    "prettier"
+  ],
   "settings": {
     "react": {
       "version": "detect"
     },
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
       }
     }
   }

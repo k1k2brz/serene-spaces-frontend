@@ -1,12 +1,11 @@
 node_modules
-.eslintrc.js
+.eslintrc.json
 package.json
-build
+package-lock.json
 public
 scripts
 **/*.d.ts
-**/*.stories.ts
 **/*.mdx
 *.stories.ts
-**/*.cjs
+*.cjs
 *.mjs
