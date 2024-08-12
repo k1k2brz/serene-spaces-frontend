@@ -1,3 +1,46 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "import/no-unresolved": "error",
+    "no-console": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", ["sibling", "parent"]],
+        "pathGroups": [
+          {
+            "pattern": "{react*,react*/**,next*,next*/**,zustand*,zustand*/**}",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "jsx-a11y/anchor-is-valid": "off",
+    "prettier/prettier": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
 }
