@@ -1,0 +1,12 @@
+node_modules
+.eslintrc.js
+package.json
+build
+public
+scripts
+**/*.d.ts
+**/*.stories.ts
+**/*.mdx
+*.stories.ts
+**/*.cjs
+*.mjs
