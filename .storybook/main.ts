@@ -13,5 +13,30 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
+  // next.js 이미지 로더와의 충돌방지
+  webpackFinal: async (config: any) => {
+    config.module.rules.push({
+      test: /\.(png|jpe?g|gif|svg)$/i,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'static/assets/',
+            publicPath: 'static/assets/',
+          },
+        },
+        {
+          loader: 'url-loader',
+          options: {
+            limit: 8192, // 파일 크기가 8kb 이하인 경우 base64로 인코딩
+            name: '[name].[ext]',
+          },
+        },
+      ],
+    });
+
+    return config;
+  },
 };
 export default config;

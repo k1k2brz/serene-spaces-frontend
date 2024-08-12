@@ -1,5 +1,5 @@
 {
-  "name": "re-aco-frontend",
+  "name": "serene-spaces-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,10 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.51.23",
+    "@tanstack/react-query-devtools": "^5.51.23",
+    "classnames": "^2.5.1",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18"
@@ -28,6 +33,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^8.0.1",
     "@typescript-eslint/parser": "^8.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
