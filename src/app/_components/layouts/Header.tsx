@@ -1,31 +1,52 @@
+import Link from 'next/link';
 import React from 'react';
 
 export const Header = () => {
   return (
-    <header className="bg-white shadow-sm">
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header className="bg-serene-500 shadow">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex-shrink-0">
-            <h1 className="text-2xl font-semibold text-gray-800">Serene Spaces</h1>
+          <div className="flex items-center space-x-4">
+            <Link href="#" className="text-xl font-semibold text-white sm:text-2xl">
+              Serene Spaces
+            </Link>
+            <nav className="hidden space-x-4 md:flex">
+              <Link href="#" className="text-white">
+                Categories
+              </Link>
+              <Link href="#" className="text-white">
+                Deals
+              </Link>
+              <Link href="#" className="text-white">
+                What`s New
+              </Link>
+            </nav>
           </div>
-          <div className="hidden sm:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
-                홈
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
-                제품
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
-                소개
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
-                문의
-              </a>
-            </div>
+          <div className="hidden items-center space-x-4 md:flex">
+            <input type="text" placeholder="Search Product" className="rounded-md px-3 py-2" />
+            <Link href="#" className="text-white">
+              Account or login, signup
+            </Link>
+            <Link href="#" className="text-white">
+              Cart
+            </Link>
+          </div>
+          <div className="flex items-center md:hidden">
+            {/* 햄버거 메뉴 아이콘 (모바일 전용) */}
+            <button className="text-white">
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+              </svg>
+            </button>
           </div>
         </div>
-      </nav>
+      </div>
     </header>
   );
 };
