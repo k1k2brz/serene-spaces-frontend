@@ -8,7 +8,8 @@
     "plugin:import/warnings",
     "plugin:import/typescript",
     "plugin:prettier/recommended",
-    "plugin:storybook/recommended"
+    "plugin:storybook/recommended",
+    "prettier"
   ],
   "rules": {
     "prettier/prettier": [
@@ -20,10 +21,11 @@
     "react/react-in-jsx-scope": "off",
     "import/no-unresolved": "error",
     "no-console": "off",
+    "prefer-const": "off",
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal", ["sibling", "parent"]],
+        "groups": ["builtin", "external", "internal", ["sibling", "parent", "index"], "type", "unknown"],
         "pathGroups": [
           {
             "pattern": "{react*,react*/**,next*,next*/**,zustand*,zustand*/**}",
@@ -31,6 +33,7 @@
             "position": "before"
           }
         ],
+        "pathGroupsExcludedImportTypes": ["react", "unknown"],
         "newlines-between": "always",
         "alphabetize": {
           "order": "asc",
@@ -39,16 +42,18 @@
       }
     ],
     "jsx-a11y/anchor-is-valid": "off",
-    "no-unused-vars": [
-      "error",
-      {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": true
-      }
-    ]
+    "@typescript-eslint/no-unused-vars": "warn",
+    "no-unused-vars": "off"
+    // "no-unused-vars": [
+    //   "error",
+    //   {
+    //     "vars": "all",
+    //     "args": "after-used",
+    //     "ignoreRestSiblings": true
+    //   }
+    // ]
   },
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "@typescript-eslint", "react-hooks"],
   "settings": {
     "react": {
       "version": "detect"
@@ -57,6 +62,9 @@
       "node": {
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
+    },
+    "tailwindcss": {
+      "config": "tailwind.config.ts"
     }
   }
 }
