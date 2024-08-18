@@ -11,26 +11,10 @@ import { Select } from '@/app/_components/common/select';
 import { roleOptions, userRole } from '@/app/_configs';
 
 import { SignupSchema } from '../_lib/schema';
-import { signupApi } from '../_lib/signup';
+import { signupApi } from '../_lib/signupApi';
 import { SignupErrors } from '../_lib/types';
 
 type SignupUserRole = (typeof roleOptions)[number]['value'];
-
-const errorMessage = (code: string | null) => {
-  if (code === 'EMAIL_ALREADY_EXISTS') {
-    return '이미 등록된 이메일입니다.';
-  }
-  if (code === 'EMAIL_INVALID') {
-    return '이메일이 올바르지 않습니다.';
-  }
-  if (code === 'PASSWORD_INVALID') {
-    return '비밀번호가 올바르지 않습니다.';
-  }
-  if (code === 'COMPANY_NAME_REQUIRED') {
-    return 'Vendor 계정에는 회사명이 필수입니다.';
-  }
-  return '';
-};
 
 export default function SignupForm() {
   const [email, setEmail] = useState('');
@@ -72,13 +56,24 @@ export default function SignupForm() {
       const response = await signupApi(result.data);
 
       if (response.code) {
-        const message = errorMessage(response.code);
-        setErrors((prevErrors) => ({
-          // API 반환시 검사되는 값들
-          email: response.code === 'EMAIL_ALREADY_EXISTS' ? message : prevErrors.email,
-          password: response.code === 'PASSWORD_INVALID' ? message : prevErrors.password,
-          companyName: response.code === 'COMPANY_NAME_REQUIRED' ? message : prevErrors.companyName,
-        }));
+        const newErrors: SignupErrors = {};
+
+        switch (response.code) {
+          case 'EMAIL_ALREADY_EXISTS':
+            newErrors.email = response.message;
+            break;
+          case 'PASSWORD_INVALID':
+            newErrors.password = response.message;
+            break;
+          case 'COMPANY_NAME_REQUIRED':
+            newErrors.companyName = response.message;
+            break;
+          default:
+            alert(response.message);
+            break;
+        }
+
+        setErrors(newErrors);
       } else {
         router.push('/login');
       }

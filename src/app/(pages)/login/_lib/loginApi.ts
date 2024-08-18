@@ -17,13 +17,9 @@ export const loginApi = async (data: LoginBody) => {
       cache: 'no-store',
     });
 
-    if (response.status === 403) {
-      return { message: 'login_failed' };
-    }
-
     const result = await response.json();
-    if (response.status === 401 || result.statusCode === 401) {
-      return { message: result.message || 'Unauthorized' };
+    if (!response.ok) {
+      return { message: result.message, code: result.code };
     }
   } catch (error: any) {
     console.error(error);
