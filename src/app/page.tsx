@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: '평화로운 공간을 만드는 가정용 소품 쇼핑몰',
 };
 
-export default function Home({ children }: { children: React.ReactNode }) {
+export default function Home() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}

@@ -24,11 +24,11 @@ export const Header = () => {
           </div>
           <div className="hidden items-center space-x-4 md:flex">
             <input type="text" placeholder="Search Product" className="rounded-md px-3 py-2" />
-            <Link href="#" className="text-white">
-              Account or login, signup
+            <Link href="/signup" className="text-white">
+              signup
             </Link>
-            <Link href="#" className="text-white">
-              Cart
+            <Link href="/login" className="text-white">
+              login
             </Link>
           </div>
           <div className="flex items-center md:hidden">

@@ -13,7 +13,7 @@ export default meta;
 
 type Story = StoryObj<typeof Label>;
 
-export const BaseButton: Story = {
+export const BaseLabel: Story = {
   args: {
     children: 'Label',
   },
