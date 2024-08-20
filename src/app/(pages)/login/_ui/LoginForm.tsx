@@ -17,10 +17,13 @@ export const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<LoginErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (e: MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+
     const formData = {
       email,
       password,
@@ -58,12 +61,31 @@ export const LoginForm = () => {
         setErrors(newErrors);
       } else {
         console.log(response);
-        // router.push('/');
+        setErrors({});
+
+        const isProduction = process.env.NODE_ENV === 'production';
+
+        const cookieOptions = [
+          `access_token=${response.access_token}`,
+          'Path=/',
+          'SameSite=Strict',
+          isProduction ? 'Secure' : '',
+          isProduction ? 'HttpOnly' : '',
+        ]
+          .filter(Boolean)
+          .join('; ');
+
+        document.cookie = cookieOptions;
+        localStorage.setItem('refresh_token', response.refresh_token); // 백엔드에서 설정한 CSP에 의해 보호 될 것.
+
+        router.push('/');
       }
     } catch (error) {
       // 네트워크 오류나 기타 예기치 못한 오류 처리
       console.error('로그인 실패:', error);
       alert('로그인 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,7 +104,7 @@ export const LoginForm = () => {
           {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
         </div>
         <div className="flex items-center">
-          <Button type="submit" variant="primary" className="mt-4 w-full">
+          <Button type="submit" variant="primary" className="mt-4 w-full" isLoading={isLoading}>
             로그인
           </Button>
         </div>
