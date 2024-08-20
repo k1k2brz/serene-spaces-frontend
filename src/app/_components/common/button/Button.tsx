@@ -14,7 +14,7 @@ interface ButtonProps {
 /**
  * 재사용 가능한 버튼 컴포넌트입니다.
  *
- * @param {object} props
+ * @param {ButtonProps} props
  * @param {ReactNode} props.children 버튼 내부에 표시될 콘텐츠 (일반적으로 텍스트 또는 아이콘)
  * @param {string} [props.className] 추가적인 사용자 정의 클래스명
  * @param {'primary' | 'secondary' | 'outline'} [props.variant='primary'] 버튼의 스타일을 결정하는 변형 옵션

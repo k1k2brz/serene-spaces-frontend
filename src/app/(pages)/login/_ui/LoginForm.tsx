@@ -7,6 +7,7 @@ import React, { MouseEvent, useState } from 'react';
 import { Button } from '@/app/_components/common/button';
 import { Input } from '@/app/_components/common/input';
 import { Label } from '@/app/_components/common/label';
+import { ErrorMessage } from '@/app/_components/common/message';
 
 import { loginApi } from '../_lib/loginApi';
 import { LoginSchema } from '../_lib/schema';
@@ -56,7 +57,8 @@ export const LoginForm = () => {
 
         setErrors(newErrors);
       } else {
-        router.push('/');
+        console.log(response);
+        // router.push('/');
       }
     } catch (error) {
       // 네트워크 오류나 기타 예기치 못한 오류 처리
@@ -72,15 +74,15 @@ export const LoginForm = () => {
         <div>
           <Label>이메일</Label>
           <Input value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" />
-          {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+          {errors.email && <ErrorMessage message={errors.email} />}
         </div>
         <div>
           <Label>비밀번호</Label>
           <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1" />
           {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
         </div>
-        <div className="flex items-center justify-between">
-          <Button type="submit" variant="primary" className="w-full">
+        <div className="flex items-center">
+          <Button type="submit" variant="primary" className="mt-4 w-full">
             로그인
           </Button>
         </div>

@@ -58,6 +58,7 @@ export default function SignupForm() {
       if (response.code) {
         const newErrors: SignupErrors = {};
 
+        // 백엔드에서 반환되는 에러들
         switch (response.code) {
           case 'EMAIL_ALREADY_EXISTS':
             newErrors.email = response.message;

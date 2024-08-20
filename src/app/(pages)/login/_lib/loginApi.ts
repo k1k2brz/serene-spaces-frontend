@@ -21,10 +21,10 @@ export const loginApi = async (data: LoginBody) => {
     if (!response.ok) {
       return { message: result.message, code: result.code };
     }
+
+    return result;
   } catch (error: any) {
     console.error(error);
     return { message: error.message || 'An error occurred during login' };
   }
-
-  return { message: null };
 };
