@@ -1,5 +1,9 @@
 'use server';
 
+import { cookies } from 'next/headers';
+
+import cookie from 'cookie';
+
 interface LoginBody {
   email: string;
   password: string;
@@ -15,7 +19,42 @@ export const loginApi = async (data: LoginBody) => {
       },
       body: JSON.stringify(data),
       cache: 'no-store',
+      credentials: 'include',
     });
+
+    let setCookie = response.headers.get('Set-Cookie');
+    if (setCookie) {
+      const parsed: any = cookie.parse(setCookie);
+
+      if (!parsed['tokens']) {
+        return {
+          message: '로그인 할 수 없습니다. 오류가 반복될 경우 관리자에게 문의해주세요.',
+          code: 'TOKEN_NOT_FOUND',
+        };
+      }
+
+      const tokens = JSON.parse(parsed['tokens']);
+
+      // 브라우저에 쿠키 추가
+      cookies().set('access_token', JSON.stringify(tokens.access_token), {
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 60 * 60,
+      });
+      cookies().set('refresh_token', JSON.stringify(tokens.refresh_token), {
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60,
+      });
+      cookies().set('user_id', JSON.stringify(tokens.userId), {
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60,
+      });
+    }
 
     const result = await response.json();
     if (!response.ok) {
@@ -25,6 +64,6 @@ export const loginApi = async (data: LoginBody) => {
     return result;
   } catch (error: any) {
     console.error(error);
-    return { message: '서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.', code: 'NETWORK_ERROR' };
+    return { message: '서버에 연결할 수 없습니다. 오류가 반복될 경우 관리자에게 문의해주세요.', code: 'NETWORK_ERROR' };
   }
 };

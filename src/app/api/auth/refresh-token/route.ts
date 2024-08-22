@@ -29,20 +29,6 @@ export async function POST(req: NextRequest) {
     path: '/',
     value: JSON.stringify({ access_token, refresh_token, expiresIn }),
   });
-
-  // response.cookies.set('access_token', access_token, {
-  //   httpOnly: process.env.NODE_ENV === 'production',
-  //   secure: process.env.NODE_ENV === 'production',
-  //   path: '/',
-  //   maxAge: 60 * 60, // 1시간
-  // });
-
-  // response.cookies.set('refresh_token', new_refresh_token, {
-  //   httpOnly: process.env.NODE_ENV === 'production',
-  //   secure: process.env.NODE_ENV === 'production',
-  //   path: '/',
-  //   maxAge: 60 * 60 * 24 * 7, // 7일
-  // });
-
+  
   return response;
 }

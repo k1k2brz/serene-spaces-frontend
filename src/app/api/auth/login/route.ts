@@ -1,3 +1,5 @@
+'use server';
+
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
@@ -18,21 +20,24 @@ export async function POST(request: Request) {
     return Response.json(tokensResponse);
   }
 
-  const response = NextResponse.json(tokensResponse, { status: 200 });
+  // 필요한 정보만 추출
+  const tokens = {
+    access_token: tokensResponse.access_token,
+    refresh_token: tokensResponse.refresh_token,
+    userId: tokensResponse.user?.id,
+  };
+
+  const response = NextResponse.json(tokens, { status: 200 });
 
   // 받은 토큰을 쿠키에 저장
   response.cookies.set({
     name: 'tokens',
     path: '/',
-    value: JSON.stringify(tokensResponse),
+    value: JSON.stringify(tokens),
     secure: process.env.NODE_ENV === 'production',
     httpOnly: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    maxAge: 60 * 60,
   });
-
-  // 토큰 확인
-  console.log('TOKEWNS: ', response.headers.get('tokens'));
-  console.log(response.headers.get('Set-Cookie'));
 
   return response;
 }

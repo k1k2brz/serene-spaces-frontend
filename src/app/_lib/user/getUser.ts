@@ -1,8 +1,10 @@
 'use server';
 
-export const getUserApi = async () => {
+export const getUserApi = async (tokens: any) => {
+    console.log(tokens)
+    
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/user/get-user`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_URL}/user/${tokens.userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

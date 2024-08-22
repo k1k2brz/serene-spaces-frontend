@@ -64,22 +64,7 @@ export const LoginForm = () => {
         console.log(response);
         setErrors({});
 
-        const isProduction = process.env.NODE_ENV === 'production';
-
-        // const cookieOptions = [
-        //   `access_token=${response.access_token}`,
-        //   'Path=/',
-        //   'SameSite=Strict',
-        //   isProduction ? 'Secure' : '',
-        //   isProduction ? 'HttpOnly' : '',
-        // ]
-        //   .filter(Boolean)
-        //   .join('; ');
-
-        // document.cookie = cookieOptions;
-        // localStorage.setItem('refresh_token', response.refresh_token);
-
-        router.push('/');
+        // router.push('/');
       }
     } catch (error) {
       // 네트워크 오류나 기타 예기치 못한 오류 처리

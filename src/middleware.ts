@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
   const credentials = getUserCredentials(request);
 
   // Token guard
-  if (protectedRoutes.includes(pathname) && (!credentials || !(await isValidJWT(credentials?.refreshToken ?? '')))) {
+  if (protectedRoutes.includes(pathname) && (!credentials || !(await isValidJWT(credentials?.refresh_token ?? '')))) {
     request.cookies.delete('user');
 
     const response = NextResponse.redirect(new URL('/auth', request.url));

@@ -2,20 +2,36 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { getUserCredentials } from '@/app/_utils/auth/getUserCredentials';
 import { isValidJWT } from '@/app/_utils/auth/isValidateJWT';
+import { cookies } from 'next/headers';
+
+const getCookie = async (name: string) => {
+  const cookieStore = cookies();
+  return cookieStore.get(name)?.value ?? '';
+};
 
 export async function GET(req: NextRequest) {
-  // 쿠키에서 사용자 자격 증명 추출
-  console.log(req.cookies.get('tokens')?.value);
-  const credentials = getUserCredentials(req);
+  const tokens = req.cookies.get('tokens')?.value;
 
-  if (!credentials || !(await isValidJWT(credentials.accessToken))) {
+  // 쿠키에서 사용자 자격 증명 추출
+  console.log('TOKENS:', tokens);
+
+  if (!tokens) {
+    console.log('토큰 세팅 대기중');
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const userId = credentials.id;
+  const credentials = getUserCredentials(req);
+  console.log('CREDENTIALS :: ', credentials);
+
+  if (!credentials || !(await isValidJWT(credentials.access_token))) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
+  const userId = credentials.userId;
+  const access_token = credentials.access_token;
 
   // 사용자 정보를 가져오기 위한 API 요청
-  const response = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/user`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_URL}/user/${userId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
