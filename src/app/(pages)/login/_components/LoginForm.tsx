@@ -38,6 +38,7 @@ export const LoginForm = () => {
       );
 
       setErrors(fieldErrors);
+      setIsLoading(false);
       return;
     }
 
@@ -65,25 +66,25 @@ export const LoginForm = () => {
 
         const isProduction = process.env.NODE_ENV === 'production';
 
-        const cookieOptions = [
-          `access_token=${response.access_token}`,
-          'Path=/',
-          'SameSite=Strict',
-          isProduction ? 'Secure' : '',
-          isProduction ? 'HttpOnly' : '',
-        ]
-          .filter(Boolean)
-          .join('; ');
+        // const cookieOptions = [
+        //   `access_token=${response.access_token}`,
+        //   'Path=/',
+        //   'SameSite=Strict',
+        //   isProduction ? 'Secure' : '',
+        //   isProduction ? 'HttpOnly' : '',
+        // ]
+        //   .filter(Boolean)
+        //   .join('; ');
 
-        document.cookie = cookieOptions;
-        localStorage.setItem('refresh_token', response.refresh_token); // 백엔드에서 설정한 CSP에 의해 보호 될 것.
+        // document.cookie = cookieOptions;
+        // localStorage.setItem('refresh_token', response.refresh_token);
 
         router.push('/');
       }
     } catch (error) {
       // 네트워크 오류나 기타 예기치 못한 오류 처리
       console.error('로그인 실패:', error);
-      alert('로그인 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+      alert('로그인 중 오류가 발생했습니다. 네트워크 상태를 확인하고 다시 시도해 주세요.');
     } finally {
       setIsLoading(false);
     }

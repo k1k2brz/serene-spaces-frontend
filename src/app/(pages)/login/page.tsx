@@ -1,8 +1,12 @@
 import React from 'react';
 
-import { LoginForm } from './_ui/LoginForm';
+import { getUserApi } from '@/app/_lib/user';
 
-export default function page() {
+import { LoginForm } from './_components/LoginForm';
+
+export default async function page() {
+  const getUser = await getUserApi();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <LoginForm />
