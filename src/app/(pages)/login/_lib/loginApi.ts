@@ -36,19 +36,19 @@ export const loginApi = async (data: LoginBody) => {
       const tokens = JSON.parse(parsed['tokens']);
 
       // 브라우저에 쿠키 추가
-      cookies().set('access_token', JSON.stringify(tokens.access_token), {
+      cookies().set('access_token', tokens.access_token, {
         path: '/',
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 60 * 60,
       });
-      cookies().set('refresh_token', JSON.stringify(tokens.refresh_token), {
+      cookies().set('refresh_token', tokens.refresh_token, {
         path: '/',
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60,
       });
-      cookies().set('user_id', JSON.stringify(tokens.userId), {
+      cookies().set('user_id', tokens.userId, {
         path: '/',
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,

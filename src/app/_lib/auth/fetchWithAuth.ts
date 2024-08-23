@@ -1,4 +1,4 @@
-'use server';
+'use client';
 
 export const fetchWithAuth = async (url: string, options: any = {}) => {
   const token = document.cookie.split('; ').find((row) => row.startsWith('access_token='));

@@ -1,9 +1,13 @@
 'use server';
 
-import { User } from '@/app/_types';
 import { cookies } from 'next/headers';
 
-export const getUserApi = async () => {
+interface UserApiProps {
+  token: string;
+  userId: string;
+}
+
+export const getUserServerApi = async () => {
   const cookieStore = cookies();
   const accessToken = cookieStore.get('access_token')?.value;
   const userId = cookieStore.get('user_id')?.value;
@@ -25,7 +29,7 @@ export const getUserApi = async () => {
       },
     });
 
-    const result: User = await response.json();
+    const result = await response.json();
     if (!response.ok) {
       throw new Error('유저의 정보를 받아올 수 없습니다.');
     }
@@ -33,6 +37,6 @@ export const getUserApi = async () => {
     return result;
   } catch (error: any) {
     console.error(error);
-    throw new Error('유저의 정보를 받아올 수 없습니다.');
+    return { message: '서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.', code: 'NETWORK_ERROR' };
   }
 };

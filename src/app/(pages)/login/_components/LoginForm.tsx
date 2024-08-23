@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { MouseEvent, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 
 import { Button } from '@/app/_components/common/button';
 import { Input } from '@/app/_components/common/input';
@@ -20,7 +20,7 @@ export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const onSubmit = async (e: MouseEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -61,10 +61,10 @@ export const LoginForm = () => {
 
         setErrors(newErrors);
       } else {
-        console.log(response);
         setErrors({});
 
-        // router.push('/');
+        setIsLoading(false);
+        router.push('/');
       }
     } catch (error) {
       // 네트워크 오류나 기타 예기치 못한 오류 처리

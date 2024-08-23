@@ -12,10 +12,10 @@ export async function middleware(request: NextRequest) {
 
   // Token guard
   if (protectedRoutes.includes(pathname) && (!credentials || !(await isValidJWT(credentials?.refresh_token ?? '')))) {
-    request.cookies.delete('user');
+    request.cookies.delete('access_token');
 
     const response = NextResponse.redirect(new URL('/auth', request.url));
-    response.cookies.delete('user');
+    response.cookies.delete('access_token');
 
     return response;
   }

@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 export type UserCredentials = {
   refresh_token: string;
   access_token: string;
-//   expiresIn: number;
+  //   expiresIn: number;
   userId: number;
 };
 
@@ -15,7 +15,6 @@ export const getUserCredentials = (req: NextRequest): UserCredentials | null => 
 
   const credentials = JSON.parse(tokens) as UserCredentials;
 
-  
   if (!credentials.userId) return null;
 
   return credentials;

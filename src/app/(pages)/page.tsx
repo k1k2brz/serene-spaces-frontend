@@ -1,8 +1,6 @@
 // app/layout.tsx
 import { type Metadata } from 'next';
 
-import './globals.css';
-
 export const metadata: Metadata = {
   title: 'Serene Spaces | 가정용 소품',
   description: '평화로운 공간을 만드는 가정용 소품 쇼핑몰',
