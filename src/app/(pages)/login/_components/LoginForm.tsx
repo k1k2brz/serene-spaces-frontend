@@ -63,7 +63,6 @@ export const LoginForm = () => {
       } else {
         setErrors({});
 
-        setIsLoading(false);
         router.push('/');
       }
     } catch (error) {

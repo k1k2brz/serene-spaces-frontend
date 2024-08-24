@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Footer, Header } from '@/app/_components/layouts';
 
 import { getUserApi } from '../_lib/user';
-import { User } from '../_types';
 
 export const metadata: Metadata = {
   title: 'Serene Spaces',
@@ -19,7 +18,9 @@ export default async function RootLayout({
 
   return (
     <>
-      <Header user={user} />
+      <header className="bg-serene-500 shadow">
+        <Header user={user} />
+      </header>
       <main>{children}</main>
       <Footer />
     </>

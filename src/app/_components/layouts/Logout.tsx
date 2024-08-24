@@ -1,10 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Button } from '../common/button';
-import { HeaderProps } from './Header';
 
-export const LogoutButton = ({ user }: HeaderProps) => {
+import { Button } from '../common/button';
+
+export const LogoutButton = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
