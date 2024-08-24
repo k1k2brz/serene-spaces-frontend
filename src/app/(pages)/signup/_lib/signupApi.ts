@@ -19,8 +19,6 @@ export const signupApi = async (data: SignupBody) => {
     }
   } catch (error: any) {
     console.error(error);
-    return { message: error.message || '회원가입 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.' };
+    return { message: '서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.', code: 'NETWORK_ERROR' };
   }
-
-  return { message: null };
 };

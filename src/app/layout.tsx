@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import { Footer, Header } from '@/app/_components/layouts';
-
 import { ReactQueryProvider } from './_providers/ReactQueryProvider';
 import './globals.css';
 
@@ -21,11 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReactQueryProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </ReactQueryProvider>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
   );

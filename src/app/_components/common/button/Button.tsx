@@ -2,6 +2,8 @@
 
 import { ReactNode } from 'react';
 
+import { Spinner } from '../spinner';
+
 interface ButtonProps {
   children: ReactNode;
   className?: string;
@@ -14,7 +16,7 @@ interface ButtonProps {
 /**
  * 재사용 가능한 버튼 컴포넌트입니다.
  *
- * @param {object} props
+ * @param {ButtonProps} props
  * @param {ReactNode} props.children 버튼 내부에 표시될 콘텐츠 (일반적으로 텍스트 또는 아이콘)
  * @param {string} [props.className] 추가적인 사용자 정의 클래스명
  * @param {'primary' | 'secondary' | 'outline'} [props.variant='primary'] 버튼의 스타일을 결정하는 변형 옵션
@@ -34,20 +36,21 @@ export const Button = ({
   const props = {
     type,
     onClick,
+    disabled: isLoading,
   };
 
   const baseStyles =
     'px-4 py-2 rounded-full font-medium transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2';
 
   const variants = {
-    primary: 'bg-serene-500 text-white hover:bg-serene-600 focus:ring-serene-500',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500',
-    outline: 'bg-transparent border border-serene-500 text-serene-500 hover:bg-serene-50 focus:ring-serene-500',
+    primary: `bg-serene-500 text-white hover:bg-serene-600 focus:ring-serene-500 ${isLoading && 'opacity-50 cursor-not-allowed'}`,
+    secondary: `bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500 ${isLoading && 'opacity-50 cursor-not-allowed'}`,
+    outline: `bg-transparent border border-serene-500 text-serene-500 hover:bg-serene-50 focus:ring-serene-500 ${isLoading && 'opacity-50 cursor-not-allowed'}`,
   };
 
   return (
     <button {...props} className={`${baseStyles} ${variants[variant]} ${className}`}>
-      {isLoading ? <div>Spinner가 들어감</div> : children}
+      {isLoading ? <Spinner /> : children}
     </button>
   );
 };
