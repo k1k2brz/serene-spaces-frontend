@@ -1,11 +1,16 @@
 import type { ImageMetadata } from '@/app/_types';
 
 /**
- * 이미지파일 검증하는 Validate입니다.
- * @param file 파일
- * @param selectedImages 현재 올라가있는 이미지 배열
- * @param capacity number: 제한 용량
- * @returns
+ * 이미지 메타데이터를 검증하는 함수입니다.
+ *
+ * @param {ImageMetadata['file']} file - 검증할 이미지 파일.
+ * @param {ImageMetadata[]} selectedImages - 이미 선택된 이미지들의 메타데이터 배열.
+ * @param {number} [capacity=2] - 이미지 파일의 최대 용량(MB)입니다. 기본값은 2MB.
+ * @returns {{
+ *   isValid: boolean;
+ *   errorMessage?: string;
+ *   imageMetadata?: ImageMetadata;
+ * }} - 이미지가 유효하지 않은 경우 `isValid`가 `false`이며, `errorMessage`가 포함됨. 이미지가 유효한 경우 `isValid`가 `true`이며, `imageMetadata`가 포함됨.
  */
 export const validateImageMetadata = (
   file: ImageMetadata['file'],
@@ -36,13 +41,19 @@ export const validateImageMetadata = (
 
   const isDuplicate = isImageDuplicate(imageMetadata, selectedImages);
   if (isDuplicate) {
-    return { isValid: false, errorMessage: 'This image is already uploaded.' };
+    return { isValid: false, errorMessage: '이미 등록된 이미지입니다.' };
   }
 
   return { isValid: true, imageMetadata };
 };
 
-// 이미지 중복검사 로직
+/**
+ * 이미지가 이미 선택된 이미지들 중 중복되는지 확인하는 함수입니다.
+ *
+ * @param {ImageMetadata} metadata - 확인할 이미지의 메타데이터.
+ * @param {ImageMetadata[]} selectedImages - 이미 선택된 이미지들의 메타데이터 배열.
+ * @returns {boolean} - 중복된 이미지가 존재하면 `true`를, 그렇지 않으면 `false`를 반환.
+ */
 export const isImageDuplicate = (metadata: ImageMetadata, selectedImages: ImageMetadata[]): boolean => {
   return selectedImages.some(
     (selectedImg) =>

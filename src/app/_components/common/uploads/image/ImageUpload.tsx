@@ -4,29 +4,44 @@ import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 're
 
 import classNames from 'classnames';
 
-import { validateImageMetadata } from './validate';
-import { CustomImage } from '../../custom-image';
+import { type ImageMetadata } from '@/app/_types';
 
-import type { ImageMetadata } from '@/app/_types';
+import { validateImageMetadata } from './validate';
+import { Button } from '../../button';
+import { CustomImage } from '../../custom-image';
 
 interface ImagesUploadProps {
   className?: string;
-  uploads?: number;
+  limit?: number;
   capacity?: number;
   selectedImages: ImageMetadata[];
   setSelectedImages: Dispatch<SetStateAction<ImageMetadata[]>>;
+  customImageClassName?: string;
   isError?: string;
 }
 
+/**
+ * 이미지 업로드를 위한 컴포넌트입니다.
+ *
+ * @param {ImagesUploadProps} props
+ * @param {string} [props.className] 추가적인 사용자 정의 클래스명
+ * @param {string} [props.customImageClassName] 이미지에 대한 추가적인 사용자 정의 클래스명
+ * @param {number} [props.limit=3] 최대 업로드할 수 있는 이미지 수
+ * @param {number} [props.capacity=2] 각 이미지의 최대 용량 (MB 단위)
+ * @param {ImageMetadata[]} props.selectedImages 선택된 이미지들의 메타데이터 배열
+ * @param {Dispatch<SetStateAction<ImageMetadata[]>>} props.setSelectedImages 선택된 이미지들을 업데이트하는 상태 설정 함수
+ * @param {string} [props.isError] 오류 메시지
+ * @returns JSX.Element 렌더링된 이미지 업로드 요소
+ */
 export const ImageUpload = ({
   className,
-  uploads = 3,
-  capacity,
+  limit = 3,
+  capacity = 2,
   selectedImages,
   setSelectedImages,
+  customImageClassName,
   isError,
 }: ImagesUploadProps) => {
-  const [isUploaded, setIsUploaded] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null | undefined>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -39,7 +54,6 @@ export const ImageUpload = ({
       .map((file) => {
         const { isValid, errorMessage, imageMetadata } = validateImageMetadata(file, selectedImages, capacity);
         if (!isValid) {
-          setIsUploaded(true);
           tempErrorMessage = errorMessage;
           return null;
         }
@@ -55,7 +69,7 @@ export const ImageUpload = ({
       return;
     }
 
-    if (selectedImages.length + validFilesMetadata.length > uploads) {
+    if (selectedImages.length + validFilesMetadata.length > limit) {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -74,7 +88,6 @@ export const ImageUpload = ({
     }
 
     setSelectedImages(newSelectedImages);
-    setIsUploaded(true);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -129,7 +142,6 @@ export const ImageUpload = ({
 
   const handleModifyImage = async (imageToModify: ImageMetadata) => {
     try {
-      setIsUploaded(true);
       const newImageMetadata = await modifyImage();
       if (newImageMetadata) {
         const updatedImages = selectedImages.map((img) => (img === imageToModify ? newImageMetadata : img));
@@ -148,7 +160,6 @@ export const ImageUpload = ({
   };
 
   const handleRemoveImage = (image: ImageMetadata) => {
-    setIsUploaded(true);
     const updatedImages = selectedImages.filter((selectedImage) => selectedImage !== image);
     setSelectedImages(updatedImages);
     URL.revokeObjectURL(image.url);
@@ -171,7 +182,6 @@ export const ImageUpload = ({
       } else if (isError) {
         alert(isError);
       }
-      setIsUploaded(false);
       setErrorMessage(null);
     }
   }, [errorMessage, isError]);
@@ -186,40 +196,31 @@ export const ImageUpload = ({
         ref={fileInputRef}
         style={{ display: 'none' }}
       />
-      <div className="flex flex-row">
+      <div className="flex flex-col">
         {selectedImages.map((image, index) => (
-          <div
-            key={index}
-            className={classNames(
-              'w-37.5 h-37.5 gap-1.25 relative mr-4 flex items-center justify-center rounded text-[0px]',
-            )}
-          >
-            <CustomImage src={image.url} alt={image.file.name} />
-            <div className="absolute bottom-0 h-9 w-full rounded-b bg-black opacity-50" />
-            <button
-              className="left-9.75 absolute bottom-1.5 flex h-6 w-6 items-center justify-center"
-              type="button"
-              onClick={() => handleModifyImage(image)}
-            >
-              수정
-            </button>
-            <button
-              className="right-9.75 absolute bottom-1.5 flex h-6 w-6 items-center justify-center"
-              type="button"
-              onClick={() => handleRemoveImage(image)}
-            >
-              삭제
-            </button>
+          <div key={index} className="relative mb-2 flex items-center justify-between rounded border p-2">
+            <div className="flex items-center">
+              <CustomImage
+                src={image.url}
+                alt={image.file.name}
+                className={classNames(customImageClassName, 'mr-4 h-12 w-12')}
+              />
+              <span className="text-sm">{image.file.name}</span>
+            </div>
+            <div className="mr-1 flex items-center">
+              <button className="ml-3 text-sm text-gray-500" type="button" onClick={() => handleModifyImage(image)}>
+                수정
+              </button>
+              <button className="ml-3 text-sm text-red-500" type="button" onClick={() => handleRemoveImage(image)}>
+                삭제
+              </button>
+            </div>
           </div>
         ))}
-        {selectedImages.length < uploads && (
-          <button
-            className="w-37.5 h-37.5 gap-1.25 body-14m mr-4 flex items-center justify-center rounded border border-dashed border-neutral-300"
-            type="button"
-            onClick={handleButtonClick}
-          >
-            image
-          </button>
+        {selectedImages.length < limit && (
+          <Button className="mb-5" type="button" variant="small" onClick={handleButtonClick}>
+            이미지 등록
+          </Button>
         )}
       </div>
     </div>
