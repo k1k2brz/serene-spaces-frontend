@@ -23,6 +23,11 @@ export default async function UpdateUserPage() {
 
   const user: User | undefined = queryClient.getQueryData(['user']);
 
+  if (!user) {
+    console.log('유저가 존재하지 않음.');
+    redirect('/login');
+  }
+
   return (
     <HydrationBoundary state={dehydratedState}>
       <MypageForm user={user} />

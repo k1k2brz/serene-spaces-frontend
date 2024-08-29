@@ -66,10 +66,10 @@ export const Header = ({ user, session }: HeaderProps) => {
 
   return (
     <>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl justify-between px-4 sm:px-6 md:block lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link href="#" className="text-xl font-semibold text-white sm:text-2xl">
+            <Link href="/" className="text-xl font-semibold text-white sm:text-2xl">
               Serene Spaces
             </Link>
             <nav className="hidden space-x-4 md:flex">

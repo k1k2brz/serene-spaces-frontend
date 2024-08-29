@@ -91,6 +91,7 @@ export default function SignupForm() {
         setErrors({});
 
         router.push('/login');
+        alert('회원가입이 완료되었습니다.');
       }
     } catch (error) {
       // 네트워크 오류나 기타 예기치 못한 오류 처리
