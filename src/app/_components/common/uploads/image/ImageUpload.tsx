@@ -18,6 +18,7 @@ interface ImagesUploadProps {
   setSelectedImages: Dispatch<SetStateAction<ImageMetadata[]>>;
   customImageClassName?: string;
   isError?: string;
+  variant?: 's' | 'l';
 }
 
 /**
@@ -31,6 +32,7 @@ interface ImagesUploadProps {
  * @param {ImageMetadata[]} props.selectedImages 선택된 이미지들의 메타데이터 배열
  * @param {Dispatch<SetStateAction<ImageMetadata[]>>} props.setSelectedImages 선택된 이미지들을 업데이트하는 상태 설정 함수
  * @param {string} [props.isError] 오류 메시지
+ * @param  {'s' | 'l'} [props.variant='s'] 버튼의 스타일을 결정하는 변형 옵션
  * @returns JSX.Element 렌더링된 이미지 업로드 요소
  */
 export const ImageUpload = ({
@@ -41,6 +43,7 @@ export const ImageUpload = ({
   setSelectedImages,
   customImageClassName,
   isError,
+  variant = 's',
 }: ImagesUploadProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null | undefined>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -186,6 +189,11 @@ export const ImageUpload = ({
     }
   }, [errorMessage, isError]);
 
+  const variants = {
+    s: `h-12 w-12`,
+    l: `h-32 w-32`,
+  };
+
   return (
     <div className={className}>
       <input
@@ -203,7 +211,7 @@ export const ImageUpload = ({
               <CustomImage
                 src={image.url}
                 alt={image.file.name}
-                className={classNames(customImageClassName, 'mr-4 h-12 w-12')}
+                className={classNames(customImageClassName, `mr-4`, variants[variant])}
               />
               <span className="text-sm">{image.file.name}</span>
             </div>

@@ -1,27 +1,32 @@
 import { redirect } from 'next/navigation';
-import React from 'react';
 
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
+import { VendorHeader } from '@/app/_components/layouts/vendor';
+import { userRole } from '@/app/_configs';
 import { getUserServerApi } from '@/app/_lib/user';
 import { User } from '@/app/_types';
 
-import { AddProductForm } from './_components/ProductAddForm';
-
-export default async function ProductAddPage() {
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({ queryKey: ['user'], queryFn: getUserServerApi });
   const dehydratedState = dehydrate(queryClient);
 
   const user: User | undefined = queryClient.getQueryData(['user']);
 
-  if (!user?.role) {
+  if (user?.role === userRole.CUSTOMER) {
+    alert('올바른 접근이 아닙니다.');
     redirect('/');
   }
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <AddProductForm user={user as User} />
+      <VendorHeader />
+      <div>{children}</div>
     </HydrationBoundary>
   );
 }

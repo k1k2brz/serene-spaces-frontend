@@ -9,7 +9,7 @@ import { Input } from '@/app/_components/common/input';
 import { Label } from '@/app/_components/common/label';
 import { ErrorMessage } from '@/app/_components/common/message';
 
-import { loginApi } from '../_lib/loginApi';
+import { loginApi } from '../_lib/api';
 import { LoginSchema } from '../_lib/schema';
 import { type LoginErrors } from '../_lib/types';
 

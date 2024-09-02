@@ -2,10 +2,7 @@
 
 import { cookies } from 'next/headers';
 
-interface UserApiProps {
-  token: string;
-  userId: string;
-}
+import { User } from '@/app/_types';
 
 export const getUserServerApi = async () => {
   const cookieStore = cookies();
@@ -22,21 +19,24 @@ export const getUserServerApi = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`, {
       method: 'GET',
+      next: {
+        tags: ['user', userId],
+      },
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
-        cache: 'no-store',
       },
+      cache: 'no-store',
     });
 
-    const result = await response.json();
+    const result: User = await response.json();
     if (!response.ok) {
       throw new Error('유저의 정보를 받아올 수 없습니다.');
     }
 
     return result;
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    return { message: '서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.', code: 'NETWORK_ERROR' };
+    throw new Error('유저의 정보를 받아올 수 없습니다.');
   }
 };

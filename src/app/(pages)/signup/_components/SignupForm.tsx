@@ -12,8 +12,8 @@ import { ImageUpload } from '@/app/_components/common/uploads/image/ImageUpload'
 import { roleOptions, userRole } from '@/app/_configs';
 import { type ImageMetadata } from '@/app/_types';
 
+import { signupApi } from '../_lib/api';
 import { SignupSchema } from '../_lib/schema';
-import { signupApi } from '../_lib/signupApi';
 import { type SignupErrors } from '../_lib/types';
 
 type SignupUserRole = (typeof roleOptions)[number]['value'];

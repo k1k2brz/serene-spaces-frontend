@@ -1,30 +1,41 @@
 import { ReactNode } from 'react';
 
 interface InputProps {
-  isError?: string;
+  isError?: boolean;
   className?: string;
   value: string;
   type?: 'text' | 'number' | 'password' | 'email';
   onChange: (...args: any) => void;
   children?: ReactNode;
+  placeholder?: string;
 }
 
 /**
  * Input 컴포넌트의 속성 타입
  *
  * @param {InputProps} props
- * @param {string} [props.isError] - 에러 상태를 나타내는 문자열
+ * @param {boolean} [props.isError] - 에러 상태를 나타내는 불리언
  * @param {string} [props.className] - 추가적인 사용자 정의 클래스명
  * @param {string} props.value - input의 값
+ * @param {string} [props.placeholder] - placeholder의 값
  * @param {'text' | 'number' | 'password' | 'email'} [props.type='text'] - input 타입 (기본값은 'text')
  * @param {function} props.onChange - 값이 변경될 때 호출되는 함수
  * @param {ReactNode} [props.children] - 에러 메시지 등 추가적으로 렌더링할 자식 노드
  * @returns JSX.Element 렌더링된 Input 요소
  */
-export const Input = ({ isError, className = '', type = 'text', value, onChange, children }: InputProps) => {
+export const Input = ({
+  isError = false,
+  className = '',
+  type = 'text',
+  value,
+  onChange,
+  children,
+  placeholder,
+}: InputProps) => {
   const props = {
     value,
     type,
+    placeholder,
     onChange,
   };
 

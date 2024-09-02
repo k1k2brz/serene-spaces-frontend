@@ -9,7 +9,7 @@ import { User } from '@/app/_types';
 import { LogoutButton } from './Logout';
 
 export interface HeaderProps {
-  user: User | null;
+  user: User | undefined;
 }
 
 const mypage = '계정관리';
