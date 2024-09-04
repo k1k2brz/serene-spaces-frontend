@@ -2,35 +2,36 @@
 
 import { cookies } from 'next/headers';
 
-export const fetchToken = async (): Promise<string | null> => {
+export const refreshAccessToken = async (): Promise<string | null> => {
   const cookieStore = cookies();
+  const accessToken = cookieStore.get('access_token')?.value;
   const refreshToken = cookieStore.get('refresh_token')?.value;
 
   if (!refreshToken) {
-    return null; // Refresh token이 없는 경우
+    return null;
   }
 
   try {
-    const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/get-token`, {
+    const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${refreshToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
+      body: JSON.stringify({ refresh_token: refreshToken }),
       cache: 'no-store',
     });
 
-    if (!tokenResponse.ok) {
+    if (tokenResponse.ok) {
+      const tokenResult = await tokenResponse.json();
+      const newAccessToken = tokenResult.access_token;
+
+      cookieStore.set('access_token', newAccessToken);
+
+      return newAccessToken;
+    } else {
       console.error('Failed to refresh access token');
       return null;
     }
-
-    const tokenResult = await tokenResponse.json();
-    const newAccessToken = tokenResult.access_token;
-
-    // 새로 받은 access token을 쿠키에 저장
-    cookieStore.set('access_token', newAccessToken);
-
-    return newAccessToken;
   } catch (error) {
     console.error('Error refreshing access token:', error);
     return null;

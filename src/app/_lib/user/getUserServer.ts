@@ -1,30 +1,26 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { getServerSession } from 'next-auth';
 
 import { User } from '@/app/_types';
+import { authOptions } from '@/auth';
 
 export const getUserServerApi = async () => {
-  const cookieStore = cookies();
-  const accessToken = cookieStore.get('access_token')?.value;
-  const userId = cookieStore.get('user_id')?.value;
+  const session = await getServerSession(authOptions);
 
-  if (!accessToken) {
-    return null;
-  }
-  if (!userId) {
+  if (!session) {
     return null;
   }
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${session.userId}`, {
       method: 'GET',
       next: {
-        tags: ['user', userId],
+        tags: ['user', session.userId.toString()],
       },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${session.accessToken}`,
       },
       cache: 'no-store',
     });

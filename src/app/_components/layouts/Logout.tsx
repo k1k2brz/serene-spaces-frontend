@@ -1,26 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 import { Button } from '../common/button';
 
 export const LogoutButton = () => {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    const logout = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/auth/logout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (logout.status === 201) {
-      router.refresh();
-    }
-  };
   return (
-    <Button type="button" className="hover:bg-transparant bg-none" onClick={() => handleLogout()}>
+    <Button type="button" className="hover:bg-transparant bg-none" onClick={() => signOut()}>
       Logout
     </Button>
   );

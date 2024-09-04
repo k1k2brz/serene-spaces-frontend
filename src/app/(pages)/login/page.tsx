@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 import React from 'react';
+
+import { authOptions } from '@/auth';
 
 import { LoginForm } from './_components/LoginForm';
 
@@ -11,10 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default async function page() {
-  const cookieStore = cookies();
-  const token = cookieStore.get('access_token')?.value;
+  const session = await getServerSession(authOptions);
 
-  if (token) {
+  if (session) {
     redirect('/');
   }
 

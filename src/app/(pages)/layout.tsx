@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
 
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import { Footer, Header } from '@/app/_components/layouts';
+import { authOptions } from '@/auth';
 
 import { getUserServerApi } from '../_lib/user';
 import { User } from '../_types';
@@ -17,6 +19,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({ queryKey: ['user'], queryFn: getUserServerApi });
   const dehydratedState = dehydrate(queryClient);
@@ -27,7 +31,7 @@ export default async function RootLayout({
     <>
       <header className="bg-serene-500 shadow">
         <HydrationBoundary state={dehydratedState}>
-          <Header user={user} />
+          <Header user={user} session={session} />
         </HydrationBoundary>
       </header>
       <main>{children}</main>

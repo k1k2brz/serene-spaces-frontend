@@ -1,15 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { Session } from 'next-auth';
+import React, { useCallback, useRef, useState } from 'react';
 
 import { userRole } from '@/app/_configs';
+import { useClickOutside } from '@/app/_hooks';
 import { User } from '@/app/_types';
 
 import { LogoutButton } from './Logout';
 
 export interface HeaderProps {
   user: User | undefined;
+  session: Session | null;
 }
 
 const mypage = '계정관리';
@@ -18,9 +21,16 @@ const wishlist = '보관함';
 const saels = '판매목록';
 const admin = '관리자페이지';
 
-export const Header = ({ user }: HeaderProps) => {
+export const Header = ({ user, session }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const ref = useRef(null);
+
+  const handleOutSideClick = useCallback(() => {
+    setIsDropdownOpen(false);
+    console.log(ref);
+  }, []);
+  useClickOutside(ref, handleOutSideClick);
 
   // 모바일 햄버거 버튼
   const handleMobileMenuToggle = () => {
@@ -53,7 +63,7 @@ export const Header = ({ user }: HeaderProps) => {
           </div>
           <div className="hidden items-center space-x-4 md:flex">
             <input type="text" placeholder="Search Product" className="rounded-md px-3 py-2" />
-            {user ? (
+            {session ? (
               <div className="relative flex items-center space-x-4">
                 <button onClick={toggleDropdown} className="text-white">
                   마이페이지
@@ -63,6 +73,7 @@ export const Header = ({ user }: HeaderProps) => {
                     className={`absolute right-2 top-full z-10 mt-2 w-full bg-white text-black shadow-lg ${
                       isDropdownOpen ? 'block' : 'hidden'
                     }`}
+                    ref={ref}
                   >
                     <ul>
                       <li className="px-4 py-2 hover:bg-gray-100">
@@ -74,7 +85,7 @@ export const Header = ({ user }: HeaderProps) => {
                       <li className="px-4 py-2 hover:bg-gray-100">
                         <Link href="/mypage/wishlist">{wishlist}</Link>
                       </li>
-                      {user.role !== userRole.CUSTOMER && (
+                      {user && user.role !== userRole.CUSTOMER && (
                         <li className="px-4 py-2 hover:bg-gray-100">
                           <Link href="/vendor/dashboard">{admin}</Link>
                         </li>

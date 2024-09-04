@@ -29,6 +29,6 @@ export async function POST(req: NextRequest) {
     path: '/',
     value: JSON.stringify({ access_token, refresh_token, expiresIn }),
   });
-  
+
   return response;
 }
