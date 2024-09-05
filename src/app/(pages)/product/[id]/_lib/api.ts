@@ -31,7 +31,7 @@ export const productDetailApi = async ({ queryKey }: QueryFunctionContext<[strin
       return { message: result.message, code: result.code };
     }
 
-    return { ...result, message: result.message, code: null };
+    return result;
   } catch (error: any) {
     console.error(error);
     return { message: '서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.', code: 'NETWORK_ERROR' };

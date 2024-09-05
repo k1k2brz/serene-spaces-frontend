@@ -2,6 +2,8 @@ import React from 'react';
 
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
+import { Product } from '@/app/_types';
+
 import { ProductDetail } from './_components/ProductDetail';
 import { productDetailApi } from './_lib/api';
 
@@ -16,12 +18,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   await queryClient.prefetchQuery({ queryKey: ['product', id.toString()], queryFn: productDetailApi });
   const dehydratedState = dehydrate(queryClient);
 
-  const product = queryClient.getQueryData(['product', id]);
-  console.log(product);
+  const product: Product | undefined = queryClient.getQueryData(['product', id]);
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ProductDetail />
+      <ProductDetail product={product} />
     </HydrationBoundary>
   );
 }
