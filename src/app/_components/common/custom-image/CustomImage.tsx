@@ -20,7 +20,7 @@ interface CustomImageProps {
  * @returns JSX.Element 렌더링된 이미지 요소
  */
 export const CustomImage = ({ className, src, alt }: CustomImageProps) => {
-  const placeholderImage = 'https://via.placeholder.com/150';
+  const placeholderImage = 'https://via.placeholder.com/500';
   const [isSrc, setIsSrc] = useState(src || placeholderImage);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
@@ -37,7 +37,7 @@ export const CustomImage = ({ className, src, alt }: CustomImageProps) => {
 
   return (
     <div
-      className={classNames(className, 'relative h-9 overflow-hidden bg-white', {
+      className={classNames(className || 'h-9', 'relative overflow-hidden bg-white', {
         'animate-none': isLoaded,
         'animate-imageFade': !isLoaded,
       })}

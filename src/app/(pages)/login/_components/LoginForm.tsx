@@ -52,7 +52,7 @@ export const LoginForm = () => {
 
       if (response?.ok) {
         setErrors({});
-        router.push('/');
+        router.refresh();
       } else if (response?.error) {
         setErrors({ general: response.error });
       } else {

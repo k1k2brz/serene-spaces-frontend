@@ -15,12 +15,6 @@ export interface HeaderProps {
   session: Session | null;
 }
 
-const mypage = '계정관리';
-const order = '주문/배송조회';
-const wishlist = '보관함';
-const saels = '판매목록';
-const admin = '관리자페이지';
-
 export const Header = ({ user, session }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -28,11 +22,9 @@ export const Header = ({ user, session }: HeaderProps) => {
 
   const handleOutSideClick = useCallback(() => {
     setIsDropdownOpen(false);
-    console.log(ref);
   }, []);
   useClickOutside(ref, handleOutSideClick);
 
-  // 모바일 햄버거 버튼
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -40,6 +32,37 @@ export const Header = ({ user, session }: HeaderProps) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const handleLinkClick = () => {
+    setIsDropdownOpen(false);
+  };
+
+  const renderLinks = () => (
+    <>
+      <li className="px-4 py-2 hover:bg-gray-100">
+        <Link href="/mypage" onClick={handleLinkClick}>
+          계정관리
+        </Link>
+      </li>
+      <li className="px-4 py-2 hover:bg-gray-100">
+        <Link href="/mypage/orders" onClick={handleLinkClick}>
+          주문/배송조회
+        </Link>
+      </li>
+      <li className="px-4 py-2 hover:bg-gray-100">
+        <Link href="/mypage/wishlist" onClick={handleLinkClick}>
+          보관함
+        </Link>
+      </li>
+      {user && user.role !== userRole.CUSTOMER && (
+        <li className="px-4 py-2 hover:bg-gray-100">
+          <Link href="/vendor/dashboard" onClick={handleLinkClick}>
+            관리자페이지
+          </Link>
+        </li>
+      )}
+    </>
+  );
 
   return (
     <React.Fragment>
@@ -69,28 +92,8 @@ export const Header = ({ user, session }: HeaderProps) => {
                   마이페이지
                 </button>
                 {isDropdownOpen && (
-                  <div
-                    className={`absolute right-2 top-full z-10 mt-2 w-full bg-white text-black shadow-lg ${
-                      isDropdownOpen ? 'block' : 'hidden'
-                    }`}
-                    ref={ref}
-                  >
-                    <ul>
-                      <li className="px-4 py-2 hover:bg-gray-100">
-                        <Link href="/mypage">{mypage}</Link>
-                      </li>
-                      <li className="px-4 py-2 hover:bg-gray-100">
-                        <Link href="/mypage/orders">{order}</Link>
-                      </li>
-                      <li className="px-4 py-2 hover:bg-gray-100">
-                        <Link href="/mypage/wishlist">{wishlist}</Link>
-                      </li>
-                      {user && user.role !== userRole.CUSTOMER && (
-                        <li className="px-4 py-2 hover:bg-gray-100">
-                          <Link href="/vendor/dashboard">{admin}</Link>
-                        </li>
-                      )}
-                    </ul>
+                  <div className="absolute right-2 top-full z-10 mt-2 w-full bg-white text-black shadow-lg" ref={ref}>
+                    <ul>{renderLinks()}</ul>
                   </div>
                 )}
                 <div className="text-white">
@@ -110,7 +113,6 @@ export const Header = ({ user, session }: HeaderProps) => {
           </div>
         </div>
         <div className="flex items-center md:hidden">
-          {/* 햄버거 메뉴 아이콘 (모바일 전용) */}
           <button onClick={handleMobileMenuToggle} className="text-white">
             <svg
               className="h-6 w-6"
@@ -124,6 +126,7 @@ export const Header = ({ user, session }: HeaderProps) => {
           </button>
         </div>
       </div>
+
       {/* 모바일 버전 */}
       {isMobileMenuOpen && (
         <div className="md:hidden">
@@ -137,25 +140,12 @@ export const Header = ({ user, session }: HeaderProps) => {
             <Link href="#" className="block text-white">
               What`s New
             </Link>
-            <Link href="/mypage" className="block text-white">
+            <Link href="/mypage" className="block text-white" onClick={handleLinkClick}>
               마이페이지
             </Link>
             {user ? (
               <ul className="space-y-2">
-                <li>
-                  <Link href="/mypage">{mypage}</Link>
-                </li>
-                <li>
-                  <Link href="/mypage/orders">{order}</Link>
-                </li>
-                <li>
-                  <Link href="/mypage/wishlist">{wishlist}</Link>
-                </li>
-                {user.role !== userRole.CUSTOMER && (
-                  <li>
-                    <Link href="/vendor/dashboard">{admin}</Link>
-                  </li>
-                )}
+                {renderLinks()}
                 <li>
                   <LogoutButton />
                 </li>

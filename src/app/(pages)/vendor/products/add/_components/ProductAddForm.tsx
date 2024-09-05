@@ -45,20 +45,16 @@ export const AddProductForm = ({ user }: AddProductFormProps) => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // ole 추가해야함
-
     const formData = new FormData();
 
     formData.append('productName', productData.productName);
     formData.append('description', productData.description);
     formData.append('companyName', productData.companyName);
     formData.append('role', user.role);
+    formData.append('price', productData.price.toString()); // 백엔드에서 숫자로 처리됨
 
-    // 백엔드에서 숫자로 처리됨
-    formData.append('price', productData.price.toString());
-
-    productData.images.forEach((image, index) => {
-      formData.append(`images[${index}]`, image.file);
+    productData.images.forEach((image) => {
+      formData.append('images', image.file);
     });
 
     // Zod 유효성 검사
@@ -81,11 +77,13 @@ export const AddProductForm = ({ user }: AddProductFormProps) => {
       if (response.code) {
         const newErrors: ProductAddErrors = {};
 
-        // 백엔드에서 반환되는 에러들
         switch (response.code) {
           // 백엔드에서 에러 메세지 추가 안됨
           case 'COMPANY_NAME_REQUIRED':
             newErrors.companyName = response.message;
+            break;
+          case 'AUTH_INVALID':
+            alert(response.message);
             break;
           default:
             alert(response.message);
