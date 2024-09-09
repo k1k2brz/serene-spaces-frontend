@@ -1,18 +1,24 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, MouseEvent, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
 import { Button } from '@/app/_components/common/button';
 import { Input } from '@/app/_components/common/input';
 import { Label } from '@/app/_components/common/label';
+import { User } from '@/app/_types';
 
+import { updateUserApi } from '../_lib/api';
 import { UpdateUserSchema } from '../_lib/schema';
 import { UpdateUserErrors } from '../_lib/types';
 
-export function UpdateUserForm() {
-  const [email, setEmail] = useState('');
-  const [companyName, setCompanyName] = useState('');
+interface MypageFormProps {
+  user: User | undefined;
+}
+
+export function MypageForm({ user }: MypageFormProps) {
+  const [email, setEmail] = useState(user?.email || '');
+  const [companyName, setCompanyName] = useState(user?.companyName || '');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
   const [errors, setErrors] = useState<UpdateUserErrors>({});
@@ -38,33 +44,33 @@ export function UpdateUserForm() {
       return;
     }
 
-    // try {
-    //   const response = await updateUserApi(result.data);
+    try {
+      const response = await updateUserApi(result.data);
 
-    //   if (response.code) {
-    //     const newErrors: UpdateUserErrors = {};
+      if (response.code) {
+        const newErrors: UpdateUserErrors = {};
 
-    //     switch (response.code) {
-    //       case 'EMAIL_INVALID':
-    //         newErrors.email = response.message;
-    //         break;
-    //       case 'COMPANY_NAME_INVALID':
-    //         newErrors.companyName = response.message;
-    //         break;
-    //       default:
-    //         alert(response.message);
-    //         break;
-    //     }
+        switch (response.code) {
+          case 'EMAIL_INVALID':
+            newErrors.email = response.message;
+            break;
+          case 'COMPANY_NAME_INVALID':
+            newErrors.companyName = response.message;
+            break;
+          default:
+            alert(response.message);
+            break;
+        }
 
-    //     setErrors(newErrors);
-    //   } else {
-    //     alert('유저 정보가 성공적으로 변경되었습니다.');
-    //     router.push('/profile');
-    //   }
-    // } catch (error) {
-    //   console.error('유저 정보 변경 실패:', error);
-    //   alert('유저 정보 변경 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.');
-    // }
+        setErrors(newErrors);
+      } else {
+        alert('유저 정보가 성공적으로 변경되었습니다.');
+        router.push('/profile');
+      }
+    } catch (error) {
+      console.error('유저 정보 변경 실패:', error);
+      alert('유저 정보 변경 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+    }
   };
 
   return (

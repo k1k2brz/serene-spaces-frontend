@@ -9,7 +9,7 @@ import { ProductCard } from './ProductCard';
 import type { Product } from '@/app/_types';
 
 interface MainpageProps {
-  products: Product[];
+  products: Product[] | undefined;
 }
 
 export const Mainpage = ({ products }: MainpageProps) => {
@@ -29,6 +29,8 @@ export const Mainpage = ({ products }: MainpageProps) => {
     console.log('Add to Cart Clicked');
   };
 
+  console.log(products);
+
   const filters = ['Product Type', 'Price', 'Review', 'Color', 'Material', 'Offer'];
 
   return (
@@ -41,15 +43,16 @@ export const Mainpage = ({ products }: MainpageProps) => {
       <FilterSection filters={filters} onFilterClick={handleFilterClick} onAllFiltersClick={handleAllFiltersClick} />
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {products.map((product: Product, index: number) => (
+        {products?.map((product: Product, index: number) => (
           <ProductCard
             key={index}
             id={product.id}
             productName={product.productName}
             description={product.description}
             price={product.price}
-            // rating={product.rating}
-            // reviews={product.reviews}
+            averageRating={product.averageRating}
+            reviews={product.reviews}
+            options={product.options}
             companyName={product.companyName}
             images={product.images}
             index={index}

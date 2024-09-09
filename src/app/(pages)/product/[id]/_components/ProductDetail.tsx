@@ -1,21 +1,13 @@
 'use client';
 
 import { CustomImage } from '@/app/_components/common/custom-image';
+import { NoReviewsMessage } from '@/app/_components/common/review/NoReviewsMessage';
 
 import type { Product } from '@/app/_types';
 
 interface ProductDetailProps {
   product: Product | undefined;
 }
-
-const options = ['dummy1', 'dummy2'];
-const reviews = [
-  {
-    user: 'riri@ds.com',
-    rating: 4,
-    comment: '좋아요.',
-  },
-];
 
 export const ProductDetail = ({ product }: ProductDetailProps) => {
   if (!product) {
@@ -28,7 +20,7 @@ export const ProductDetail = ({ product }: ProductDetailProps) => {
         {/* 이미지 영역 */}
         <div className="flex flex-col justify-center lg:col-span-6">
           <CustomImage
-            src={'/' + product.images[0]}
+            src={product.images[0]}
             alt={product.productName}
             className="h-full w-full rounded-lg object-cover shadow-lg"
           />
@@ -36,7 +28,7 @@ export const ProductDetail = ({ product }: ProductDetailProps) => {
             {product.images.slice(1, 4).map((image, index) => (
               <CustomImage
                 key={index}
-                src={'/' + image}
+                src={image}
                 alt={`${product.productName} thumbnail ${index + 1}`}
                 className="h-20 w-20 rounded-lg border object-cover"
               />
@@ -90,7 +82,7 @@ export const ProductDetail = ({ product }: ProductDetailProps) => {
                 id="size"
                 className="w-full rounded-md border border-gray-300 p-2 text-gray-600 focus:border-serene-500"
               >
-                {options.map((option, index) => (
+                {product.options.map((option, index) => (
                   <option key={index} value={option}>
                     {option}
                   </option>
@@ -111,15 +103,23 @@ export const ProductDetail = ({ product }: ProductDetailProps) => {
       <div className="mx-auto mt-12 max-w-7xl">
         <h2 className="text-2xl font-bold">Reviews</h2>
         <div className="mt-4 space-y-4">
-          {reviews.map((review, index) => (
-            <div key={index} className="rounded-lg bg-white p-4 shadow-lg">
-              <div className="flex items-center justify-between">
-                <span className="font-bold">{review.user}</span>
-                <span className="text-yellow-500">{'★'.repeat(review.rating)}</span>
-              </div>
-              <p className="mt-2 text-gray-600">{review.comment}</p>
+          {product.reviews.length < 1 ? (
+            <div className="rounded-lg bg-white p-4 shadow-lg">
+              <NoReviewsMessage />
             </div>
-          ))}
+          ) : (
+            <>
+              {product.reviews.map((review, index) => (
+                <div key={index} className="rounded-lg bg-white p-4 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold">{review.email}</span>
+                    <span className="text-yellow-500">{'★'.repeat(review.rating)}</span>
+                  </div>
+                  <p className="mt-2 text-gray-600">{review.comment}</p>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>

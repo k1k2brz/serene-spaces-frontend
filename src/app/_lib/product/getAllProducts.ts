@@ -1,16 +1,6 @@
 'use server';
 
-import { getServerSession } from 'next-auth';
-
-import { authOptions } from '@/auth';
-
-export const getProductServerApi = async () => {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return null;
-  }
-
+export const getAllProductsApi = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
       method: 'GET',
@@ -19,7 +9,7 @@ export const getProductServerApi = async () => {
       },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.accessToken}`,
+        // Authorization: `Bearer ${session.accessToken}`,
       },
       cache: 'no-store',
     });

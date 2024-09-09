@@ -17,4 +17,5 @@ export const productAddSchema = z.object({
     }),
   companyName: z.string().min(1, '회사명은 필수입니다.'),
   images: z.array(imageMetadataSchema).min(1, '최소 하나의 이미지를 업로드해야 합니다.'),
+  options: z.array(z.string().min(1, '옵션은 비어 있을 수 없습니다.')).min(1, '최소 하나의 옵션을 입력해야 합니다.'),
 });

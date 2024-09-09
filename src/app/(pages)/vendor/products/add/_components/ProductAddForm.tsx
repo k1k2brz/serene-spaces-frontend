@@ -26,6 +26,7 @@ export const AddProductForm = ({ user }: AddProductFormProps) => {
     price: 0,
     companyName: user.companyName || '',
     images: [],
+    options: [''],
   });
   const [errors, setErrors] = useState<ProductAddErrors>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -35,11 +36,38 @@ export const AddProductForm = ({ user }: AddProductFormProps) => {
     setProductData({ ...productData, [field]: e.target.value });
   };
 
+  // 이미지 변경 핸들러
   const handleImageChange: React.Dispatch<React.SetStateAction<ImageMetadata[]>> = (value) => {
     setProductData((prevData) => ({
       ...prevData,
       images: typeof value === 'function' ? value(prevData.images) : value,
     }));
+  };
+
+  // 옵션 변경 핸들러
+  const handleOptionChange = (index: number, value: string) => {
+    const newOptions = [...productData.options];
+    newOptions[index] = value;
+    setProductData({ ...productData, options: newOptions });
+  };
+
+  // 옵션 추가
+  const addOption = () => {
+    if (productData.options.length >= 10) {
+      return;
+    }
+
+    setProductData({ ...productData, options: [...productData.options, ''] });
+  };
+
+  // 옵션 제거
+  const removeOption = (index: number) => {
+    if (productData.options.length === 1) {
+      return;
+    }
+
+    const newOptions = productData.options.filter((_, i) => i !== index);
+    setProductData({ ...productData, options: newOptions });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -52,6 +80,10 @@ export const AddProductForm = ({ user }: AddProductFormProps) => {
     formData.append('companyName', productData.companyName);
     formData.append('role', user.role);
     formData.append('price', productData.price.toString()); // 백엔드에서 숫자로 처리됨
+
+    productData.options.forEach((option) => {
+      formData.append('options', option);
+    });
 
     productData.images.forEach((image) => {
       formData.append('images', image.file);
@@ -158,6 +190,29 @@ export const AddProductForm = ({ user }: AddProductFormProps) => {
         />
         {errors.companyName && <p className="text-sm text-red-500">{errors.companyName}</p>}
       </div>
+
+      <div className="flex flex-col">
+        <Label htmlFor="options" required>
+          옵션 추가
+        </Label>
+        {productData.options.map((option, index) => (
+          <div key={index} className="mt-2 flex items-center space-x-2">
+            <Input
+              value={option}
+              onChange={(e) => handleOptionChange(index, e.target.value)}
+              className="flex-1"
+              placeholder={`옵션 ${index + 1}`}
+            />
+            <Button variant="danger" onClick={() => removeOption(index)}>
+              제거
+            </Button>
+          </div>
+        ))}
+        <Button onClick={addOption} variant="secondary" className="mt-2">
+          옵션 추가
+        </Button>
+      </div>
+
       <div className="flex flex-col">
         <Label htmlFor="images" required>
           상품 이미지(최대 5개)

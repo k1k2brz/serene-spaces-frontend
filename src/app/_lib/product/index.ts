@@ -1,1 +1,1 @@
-export { getProductServerApi } from './getAllProducts';
+export { getAllProductsApi } from './getAllProducts';

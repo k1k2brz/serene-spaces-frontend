@@ -8,8 +8,6 @@ import { CustomImage } from '../common/custom-image';
 import type { Product } from '@/app/_types';
 
 interface ProductCardProps extends Product {
-  rating?: number;
-  reviews?: number;
   index: number;
   onAddToCart?: () => void;
 }
@@ -18,7 +16,7 @@ export const ProductCard = ({
   productName,
   description,
   price,
-  rating,
+  averageRating,
   reviews,
   images,
   id,
@@ -47,18 +45,19 @@ export const ProductCard = ({
       tabIndex={index}
     >
       <div className="relative mx-auto">
-        <CustomImage className="h-32" src={'/' + images[0]} alt={productName} />
+        <CustomImage className="h-32" src={images[0]} alt={productName} />
       </div>
       <h3 className="mt-4 text-lg font-medium text-gray-900">{productName}</h3>
       <p className="mt-1 text-sm text-gray-500">{description}</p>
       <div className="mt-2">
-        {rating && (
+        {averageRating && (
           <span className="font-semibold text-green-500">
-            {'★'.repeat(rating)}
-            {'☆'.repeat(5 - rating)}
+            {'★'.repeat(Math.round(averageRating))}
+            {'☆'.repeat(5 - Math.round(averageRating))}
+            {averageRating}
           </span>
         )}
-        <span className="ml-2 text-sm text-gray-500">({reviews})</span>
+        {/* <span className="ml-2 text-sm text-gray-500">({reviews})</span> */}
       </div>
       <div className="mt-4 flex items-center justify-between">
         <span className="text-xl font-bold text-gray-900">{Number(price).toLocaleString()}원</span>

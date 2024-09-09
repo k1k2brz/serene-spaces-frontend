@@ -1,7 +1,9 @@
 import { type Metadata } from 'next';
 
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+
 import { Mainpage } from '../_components/main/MainPage';
-import { getProductServerApi } from '../_lib/product/getAllProducts';
+import { getAllProductsApi } from '../_lib/product/getAllProducts';
 import { Product } from '../_types';
 
 export const metadata: Metadata = {
@@ -10,7 +12,15 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const products: Product[] = await getProductServerApi();
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({ queryKey: ['products'], queryFn: getAllProductsApi });
+  const dehydratedState = dehydrate(queryClient);
 
-  return <Mainpage products={products} />;
+  const products: Product[] | undefined = queryClient.getQueryData(['products']);
+
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <Mainpage products={products} />
+    </HydrationBoundary>
+  );
 }

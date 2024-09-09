@@ -65,7 +65,7 @@ export const Header = ({ user, session }: HeaderProps) => {
   );
 
   return (
-    <React.Fragment>
+    <>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -167,6 +167,6 @@ export const Header = ({ user, session }: HeaderProps) => {
           </nav>
         </div>
       )}
-    </React.Fragment>
+    </>
   );
 };
