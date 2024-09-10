@@ -1,0 +1,1 @@
+export { getAllProductsApi } from './getAllProducts';

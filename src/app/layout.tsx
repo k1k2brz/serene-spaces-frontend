@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
+import AuthSession from './_providers/AuthSession';
 import { ReactQueryProvider } from './_providers/ReactQueryProvider';
 import './globals.css';
 
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <AuthSession>
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+        </AuthSession>
       </body>
     </html>
   );

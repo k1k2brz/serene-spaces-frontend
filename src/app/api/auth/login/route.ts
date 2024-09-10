@@ -12,32 +12,29 @@ export async function POST(request: Request) {
     },
   };
 
-  const tokensResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, options).then((res) =>
-    res.json(),
-  );
+  const tokensResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, options);
 
-  if ('error' in tokensResponse) {
-    return Response.json(tokensResponse);
+  const result = await tokensResponse.json();
+
+  if (!tokensResponse.ok) {
+    // 에러 응답 시 에러 메시지와 코드 반환
+    return NextResponse.json(
+      {
+        message: result.message || '로그인 실패',
+        code: result.code || 'UNKNOWN_ERROR',
+      },
+      { status: tokensResponse.status || 401 },
+    );
   }
 
-  // 필요한 정보만 추출
   const tokens = {
-    access_token: tokensResponse.access_token,
-    refresh_token: tokensResponse.refresh_token,
-    userId: tokensResponse.user?.id,
+    access_token: result.access_token,
+    refresh_token: result.refresh_token,
+    userId: result.user?.id,
+    expiresIn: result.expiresIn,
   };
 
   const response = NextResponse.json(tokens, { status: 200 });
-
-  // 받은 토큰을 쿠키에 저장
-  response.cookies.set({
-    name: 'tokens',
-    path: '/',
-    value: JSON.stringify(tokens),
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60,
-  });
 
   return response;
 }

@@ -1,28 +1,30 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { Session } from 'next-auth';
+import React, { useCallback, useRef, useState } from 'react';
 
 import { userRole } from '@/app/_configs';
+import { useClickOutside } from '@/app/_hooks';
 import { User } from '@/app/_types';
 
 import { LogoutButton } from './Logout';
 
 export interface HeaderProps {
-  user: User | null;
+  user: User | undefined;
+  session: Session | null;
 }
 
-const mypage = '계정관리';
-const order = '주문/배송조회';
-const wishlist = '보관함';
-const saels = '판매목록';
-const admin = '관리자페이지';
-
-export const Header = ({ user }: HeaderProps) => {
+export const Header = ({ user, session }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const ref = useRef(null);
 
-  // 모바일 햄버거 버튼
+  const handleOutSideClick = useCallback(() => {
+    setIsDropdownOpen(false);
+  }, []);
+  useClickOutside(ref, handleOutSideClick);
+
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -31,12 +33,43 @@ export const Header = ({ user }: HeaderProps) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleLinkClick = () => {
+    setIsDropdownOpen(false);
+  };
+
+  const renderLinks = () => (
+    <>
+      <li className="px-4 py-2 hover:bg-gray-100">
+        <Link href="/mypage" onClick={handleLinkClick}>
+          계정관리
+        </Link>
+      </li>
+      <li className="px-4 py-2 hover:bg-gray-100">
+        <Link href="/mypage/orders" onClick={handleLinkClick}>
+          주문/배송조회
+        </Link>
+      </li>
+      <li className="px-4 py-2 hover:bg-gray-100">
+        <Link href="/mypage/wishlist" onClick={handleLinkClick}>
+          보관함
+        </Link>
+      </li>
+      {user && user.role !== userRole.CUSTOMER && (
+        <li className="px-4 py-2 hover:bg-gray-100">
+          <Link href="/vendor/dashboard" onClick={handleLinkClick}>
+            관리자페이지
+          </Link>
+        </li>
+      )}
+    </>
+  );
+
   return (
-    <React.Fragment>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <>
+      <div className="mx-auto flex max-w-7xl justify-between px-4 sm:px-6 md:block lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link href="#" className="text-xl font-semibold text-white sm:text-2xl">
+            <Link href="/" className="text-xl font-semibold text-white sm:text-2xl">
               Serene Spaces
             </Link>
             <nav className="hidden space-x-4 md:flex">
@@ -53,33 +86,14 @@ export const Header = ({ user }: HeaderProps) => {
           </div>
           <div className="hidden items-center space-x-4 md:flex">
             <input type="text" placeholder="Search Product" className="rounded-md px-3 py-2" />
-            {user ? (
+            {session ? (
               <div className="relative flex items-center space-x-4">
                 <button onClick={toggleDropdown} className="text-white">
                   마이페이지
                 </button>
                 {isDropdownOpen && (
-                  <div
-                    className={`absolute right-2 top-full z-10 mt-2 w-full bg-white text-black shadow-lg ${
-                      isDropdownOpen ? 'block' : 'hidden'
-                    }`}
-                  >
-                    <ul>
-                      <li className="px-4 py-2 hover:bg-gray-100">
-                        <Link href="/mypage">{mypage}</Link>
-                      </li>
-                      <li className="px-4 py-2 hover:bg-gray-100">
-                        <Link href="/mypage/orders">{order}</Link>
-                      </li>
-                      <li className="px-4 py-2 hover:bg-gray-100">
-                        <Link href="/mypage/wishlist">{wishlist}</Link>
-                      </li>
-                      {user.role !== userRole.CUSTOMER && (
-                        <li className="px-4 py-2 hover:bg-gray-100">
-                          <Link href="/vendor/dashboard">{admin}</Link>
-                        </li>
-                      )}
-                    </ul>
+                  <div className="absolute right-2 top-full z-10 mt-2 w-full bg-white text-black shadow-lg" ref={ref}>
+                    <ul>{renderLinks()}</ul>
                   </div>
                 )}
                 <div className="text-white">
@@ -99,7 +113,6 @@ export const Header = ({ user }: HeaderProps) => {
           </div>
         </div>
         <div className="flex items-center md:hidden">
-          {/* 햄버거 메뉴 아이콘 (모바일 전용) */}
           <button onClick={handleMobileMenuToggle} className="text-white">
             <svg
               className="h-6 w-6"
@@ -113,6 +126,7 @@ export const Header = ({ user }: HeaderProps) => {
           </button>
         </div>
       </div>
+
       {/* 모바일 버전 */}
       {isMobileMenuOpen && (
         <div className="md:hidden">
@@ -126,25 +140,12 @@ export const Header = ({ user }: HeaderProps) => {
             <Link href="#" className="block text-white">
               What`s New
             </Link>
-            <Link href="/mypage" className="block text-white">
+            <Link href="/mypage" className="block text-white" onClick={handleLinkClick}>
               마이페이지
             </Link>
             {user ? (
               <ul className="space-y-2">
-                <li>
-                  <Link href="/mypage">{mypage}</Link>
-                </li>
-                <li>
-                  <Link href="/mypage/orders">{order}</Link>
-                </li>
-                <li>
-                  <Link href="/mypage/wishlist">{wishlist}</Link>
-                </li>
-                {user.role !== userRole.CUSTOMER && (
-                  <li>
-                    <Link href="/vendor/dashboard">{admin}</Link>
-                  </li>
-                )}
+                {renderLinks()}
                 <li>
                   <LogoutButton />
                 </li>
@@ -166,6 +167,6 @@ export const Header = ({ user }: HeaderProps) => {
           </nav>
         </div>
       )}
-    </React.Fragment>
+    </>
   );
 };

@@ -11,3 +11,9 @@ export interface User {
   logoUrl: any;
   tokenVersion: number;
 }
+
+export interface Review {
+  comment: string;
+  email: string;
+  rating: number;
+}

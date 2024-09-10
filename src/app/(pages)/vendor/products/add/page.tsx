@@ -1,31 +1,30 @@
+import { redirect } from 'next/navigation';
 import React from 'react';
 
-import { Button } from '@/app/_components/common/button';
-import { Label } from '@/app/_components/common/label';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-export default function page() {
+import { getUserServerApi } from '@/app/_lib/user';
+import { User } from '@/app/_types';
+
+import { AddProductForm } from './_components/ProductAddForm';
+
+export default async function ProductAddPage() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({ queryKey: ['user'], queryFn: getUserServerApi });
+  const dehydratedState = dehydrate(queryClient);
+
+  const user: User | undefined = queryClient.getQueryData(['user']);
+
+  if (!user?.role) {
+    redirect('/');
+  }
+
   return (
-    <div className="bg-white p-6 shadow-md">
-      <h1 className="text-2xl font-bold">Add New Product</h1>
-      <form className="mt-4">
-        <div className="mb-4">
-          <Label>상품명</Label>
-          <input type="text" className="mt-1 w-full rounded-md border-gray-300" />
-        </div>
-        <div className="mb-4">
-          <Label>설명</Label>
-          <textarea className="mt-1 w-full rounded-md border-gray-300"></textarea>
-        </div>
-        <div className="mb-4">
-          <Label>가격</Label>
-          <input type="number" className="mt-1 w-full rounded-md border-gray-300" />
-        </div>
-        <div className="mb-4">
-          <Label>이미지 업로드</Label>
-          <input type="file" className="mt-1 w-full" />
-        </div>
-        <Button type="submit">상품 등록</Button>
-      </form>
+    <div className="flex flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+      <h1 className="mb-6 text-3xl font-bold text-serene-600">상품등록</h1>
+      <HydrationBoundary state={dehydratedState}>
+        <AddProductForm user={user as User} />
+      </HydrationBoundary>
     </div>
   );
 }
