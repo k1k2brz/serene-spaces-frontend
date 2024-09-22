@@ -1,6 +1,11 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import React from 'react';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { postAddCartApi } from '@/app/_lib/cart/api';
 
 import { FilterSection } from './FilterSection';
 import { HeroSection } from './HeroSection';
@@ -13,23 +18,49 @@ interface MainpageProps {
 }
 
 export const Mainpage = ({ products }: MainpageProps) => {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+
+  // 장바구니에 아이템 추가
+  const mutation = useMutation({
+    mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) => {
+      if (!session) {
+        throw new Error('인증 토큰이 없습니다.');
+      }
+      return postAddCartApi(itemId, session.accessToken, quantity);
+    },
+    onSuccess: (data) => {
+      if (data.code === 'CART_ALREADY_PRODUCT') {
+        alert(data.message);
+      } else {
+        alert('상품이 장바구니에 추가되었습니다.');
+      }
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+    },
+    onError: (error) => {
+      console.error('장바구니에 아이템 추가 실패:', error);
+    },
+  });
+
+  const handleAddToCart = async (itemId: number, selectedQuantity: number) => {
+    if (!session) {
+      alert('사용자가 로그인하지 않았습니다.');
+      return;
+    }
+    mutation.mutate({ itemId, quantity: selectedQuantity });
+  };
+
   const handleBuyNowClick = () => {
-    console.log('Buy Now Clicked');
+    console.log('바로구매');
   };
 
   const handleFilterClick = (filter: string) => {
-    console.log('Filter Clicked:', filter);
+    console.log('필터 :', filter);
   };
 
   const handleAllFiltersClick = () => {
-    console.log('All Filters Clicked');
+    console.log('필터 전체');
   };
-
-  const handleAddToCart = () => {
-    console.log('Add to Cart Clicked');
-  };
-
-  console.log(products);
 
   const filters = ['Product Type', 'Price', 'Review', 'Color', 'Material', 'Offer'];
 
@@ -56,7 +87,7 @@ export const Mainpage = ({ products }: MainpageProps) => {
             companyName={product.companyName}
             images={product.images}
             index={index}
-            onAddToCart={handleAddToCart}
+            onAddToCart={() => handleAddToCart(product.id, 1)}
           />
         ))}
       </div>

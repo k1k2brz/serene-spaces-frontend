@@ -9,7 +9,7 @@ import type { Product } from '@/app/_types';
 
 interface ProductCardProps extends Product {
   index: number;
-  onAddToCart?: () => void;
+  onAddToCart?: (itemId: number, quantity: number) => void;
 }
 
 export const ProductCard = ({
@@ -65,7 +65,7 @@ export const ProductCard = ({
           className="rounded-md bg-serene-500 px-3 py-1 text-white hover:bg-serene-600"
           onClick={(e) => {
             e.stopPropagation();
-            if (onAddToCart) onAddToCart();
+            if (onAddToCart) onAddToCart(id, 1);
           }}
         >
           Add to Cart

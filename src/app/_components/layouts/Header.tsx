@@ -51,7 +51,7 @@ export const Header = ({ user, session }: HeaderProps) => {
       </li>
       <li className="px-4 py-2 hover:bg-gray-100">
         <Link href="/mypage/wishlist" onClick={handleLinkClick}>
-          보관함
+          찜목록
         </Link>
       </li>
       {user && user.role !== userRole.CUSTOMER && (
@@ -88,6 +88,9 @@ export const Header = ({ user, session }: HeaderProps) => {
             <input type="text" placeholder="Search Product" className="rounded-md px-3 py-2" />
             {session ? (
               <div className="relative flex items-center space-x-4">
+                <div className="text-white">
+                  <Link href={`/cart/${session.userId}`}>장바구니</Link>
+                </div>
                 <button onClick={toggleDropdown} className="text-white">
                   마이페이지
                 </button>
