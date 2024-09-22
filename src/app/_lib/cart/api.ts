@@ -38,6 +38,31 @@ export const getCartApi = async ({ queryKey }: QueryFunctionContext<[string, str
   }
 };
 
+export const postAddCartApi = async (itemId: number, accessToken: string, selectedQuantity: number) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ productId: itemId, quantity: selectedQuantity }),
+      cache: 'no-store',
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return { message: result.message, code: result.code };
+    }
+
+    return result;
+  } catch (error: any) {
+    console.error(error);
+    return { message: '서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.', code: 'NETWORK_ERROR' };
+  }
+};
+
 export const deleteCartApi = async ({ queryKey }: QueryFunctionContext<[string, string]>) => {
   const [_, id] = queryKey;
 
@@ -48,7 +73,7 @@ export const deleteCartApi = async ({ queryKey }: QueryFunctionContext<[string, 
   }
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/delete/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

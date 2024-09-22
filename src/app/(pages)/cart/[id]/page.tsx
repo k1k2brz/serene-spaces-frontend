@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import { CartForm } from './_components/CartForm';
-import { getCartApi } from './_lib/api';
+import { getCartApi } from '../../../_lib/cart/api';
 
 import type { Cart } from '@/app/_types';
 

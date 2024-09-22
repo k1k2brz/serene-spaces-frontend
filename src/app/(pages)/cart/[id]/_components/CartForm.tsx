@@ -6,7 +6,7 @@ import React from 'react';
 import { CustomImage } from '@/app/_components/common/custom-image';
 import { Cart } from '@/app/_types';
 
-import { deleteCartApi } from '../_lib/api';
+import { deleteCartApi } from '../../../../_lib/cart/api';
 
 interface CartFormProps {
   userId: string;
